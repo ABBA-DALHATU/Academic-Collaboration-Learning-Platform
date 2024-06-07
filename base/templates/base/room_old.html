@@ -1,0 +1,49 @@
+{% extends 'main.html' %} {% block content %}
+
+<style>
+  .room-container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+  }
+</style>
+
+<div class="room-container">
+  <div>
+    <h1>{{room.name}}</h1>
+
+    <p>{{room.description}}</p>
+
+    <div class="comment-wrapper">
+      <h3>Conversation</h3>
+      <hr />
+
+      {% for message in room_messages %} {% if request.user == message.user %}
+      <a href="{% url 'delete-message' message.id %}">delete</a>
+      {% endif %}
+      <small
+        >@{{message.user}} <span>{{message.created|timesince}} ago</span></small
+      ><!--this '|timesince' is so the it wont show like this in the template 'March 6, 2024, 8:19 a.m' instead it will be like thins '5 min ago'-->
+      <p>{{message.body}}</p>
+      <hr />
+      {% endfor %}
+    </div>
+    {% if request.user.is_authenticated %}
+    <div class="comment-form">
+      <form method="POST" action="">
+        {% csrf_token %}
+        <input type="text" name="body" placeholder="write your message here" />
+      </form>
+    </div>
+    {% endif %}
+  </div>
+
+  <div>
+    <h3>Participants</h3>
+    <hr />
+    {% for user in participants %}
+    <p>@{{user.username}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
