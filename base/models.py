@@ -102,3 +102,5 @@ class Res(models.Model):
             return self.document.name
         elif self.video:
             return self.video.name
+        else:
+            return "Resource with no content"
